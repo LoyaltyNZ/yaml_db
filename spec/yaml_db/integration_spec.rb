@@ -1,5 +1,3 @@
-require 'active_record/railtie'
-
 # connect to in-memory SQLite database
 ActiveRecord::Base.establish_connection(
   :adapter => 'sqlite3',
@@ -36,13 +34,12 @@ RSpec.describe "with real ActiveRecord," do
     @io = StringIO.new
     YamlDb::Dump.dump_table_records(@io, 'users')
     @io.rewind
-    expect(@io.read).to eq(<<EOYAML
-  records: 
-  - - 1
-    - alice
-  - - 2
-    - bob
-EOYAML
+    expect(@io.read).to eq(
+      "  records: \n" \
+      "  - - 1\n"     \
+      "    - alice\n" \
+      "  - - 2\n"     \
+      "    - bob\n"
     )
   end
 

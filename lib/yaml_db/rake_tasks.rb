@@ -25,7 +25,11 @@ module YamlDb
     end
 
     def self.dump_dir(dir = '')
-      "#{Rails.root}/db#{dir}"
+      if defined?( Rails )
+        "#{Rails.root}/db#{dir}"
+      else
+        "db#{dir}"
+      end
     end
 
     def self.helper

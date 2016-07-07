@@ -2,7 +2,6 @@ require 'rubygems'
 require 'yaml'
 require 'active_record'
 require 'active_support/core_ext/kernel/reporting'
-require 'rails/railtie'
 require 'yaml_db/rake_tasks'
 require 'yaml_db/version'
 require 'yaml_db/serialization_helper'
@@ -68,11 +67,11 @@ module YamlDb
     end
   end
 
-  class Railtie < Rails::Railtie
-    rake_tasks do
-      load File.expand_path('../tasks/yaml_db_tasks.rake',
-__FILE__)
-    end
-  end
+#   class Railtie < Rails::Railtie
+#     rake_tasks do
+#       load File.expand_path('../tasks/yaml_db_tasks.rake',
+# __FILE__)
+#     end
+#   end
 
 end

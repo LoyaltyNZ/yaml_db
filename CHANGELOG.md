@@ -1,3 +1,9 @@
+## yaml_db 0.4.0
+
+* Remove Rails dependency, at the expense of greater installation effort.
+
+## Unreleased
+
 * Put everything under the YamlDb module namespace
 
 ## yaml_db 0.3.0

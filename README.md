@@ -4,19 +4,15 @@ YamlDb is a database-independent format for dumping and restoring data.  It comp
 
 This can be used as a replacement for mysqldump or pg_dump, but only for the databases typically used by Rails apps.  Users, permissions, schemas, triggers, and other advanced database features are not supported - by design.
 
-Any database that has an ActiveRecord adapter should work.
-
-This gem supports Rails 3.x and 4.x.
-
-[![Build Status](https://travis-ci.org/yamldb/yaml_db.svg?branch=master)](https://travis-ci.org/yamldb/yaml_db)
+Any database that has an ActiveRecord adapter should work. ActiveRecord v3 or v4 work in theory, with only v4 tested in practice.
 
 ## Installation
 
-Simply add to your Gemfile:
+First add to your Gemfile:
 
     gem 'yaml_db'
 
-All rake tasks will then be available to you.
+Since this version doesn't rely on Rails, it doesn't auto-include Rake tasks via Railties. There are no assumptions about the structure/file layout of your application. You'll need to copy in and/or adapt file `lib/yaml_db/rake_tasks.rb` as part of your existing `Rakefile`, probably modifying method `self.dump_dir` to produce a more application-appropriate result in passing.
 
 ## Usage
 
@@ -44,4 +40,4 @@ One common use would be to switch your data from one database backend to another
 
 ## Credits
 
-Created by Orion Henry and Adam Wiggins. Major updates by Ricardo Chimal Jr. and Nate Kidwell.
+Created by Orion Henry and Adam Wiggins. Major updates by Ricardo Chimal Jr. and Nate Kidwell. Railties dependency removal (for usage within services on ActiveRecord 4.x but with Rack 2.x) by Andrew Hodgkinson.
