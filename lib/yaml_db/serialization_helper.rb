@@ -1,3 +1,5 @@
+require 'active_support/core_ext/kernel/reporting'
+
 module YamlDb
   module SerializationHelper
 
@@ -83,11 +85,10 @@ module YamlDb
         if column_names.nil?
           return
         end
-        columns = column_names.map{|cn| ActiveRecord::Base.connection.columns(table).detect{|c| c.name == cn}}
         quoted_column_names = column_names.map { |column| ActiveRecord::Base.connection.quote_column_name(column) }.join(',')
         quoted_table_name = Utils.quote_table(table)
         records.each do |record|
-          quoted_values = record.zip(columns).map{|c| ActiveRecord::Base.connection.quote(c.first, c.last)}.join(',')
+          quoted_values = record.map{|c| ActiveRecord::Base.connection.quote(c)}.join(',')
           ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{quoted_values})")
         end
       end
@@ -141,6 +142,9 @@ module YamlDb
         ActiveRecord::Base.connection.quote_table_name(table)
       end
 
+      def self.quote_column(column)
+        ActiveRecord::Base.connection.quote_column_name(column)
+      end
     end
 
     class Dump
@@ -161,7 +165,7 @@ module YamlDb
       end
 
       def self.tables
-        ActiveRecord::Base.connection.tables.reject { |table| ['schema_info', 'schema_migrations'].include?(table) }
+        ActiveRecord::Base.connection.tables.reject { |table| ['schema_info', 'schema_migrations'].include?(table) }.sort
       end
 
       def self.dump_table(io, table)
@@ -179,12 +183,12 @@ module YamlDb
       def self.each_table_page(table, records_per_page=1000)
         total_count = table_record_count(table)
         pages = (total_count.to_f / records_per_page).ceil - 1
-        id = table_column_names(table).first
+        keys = sort_keys(table)
         boolean_columns = Utils.boolean_columns(table)
         quoted_table_name = Utils.quote_table(table)
 
         (0..pages).to_a.each do |page|
-          query = Arel::Table.new(table, ActiveRecord::Base).order(id).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
+          query = Arel::Table.new(table).order(*keys).skip(records_per_page*page).take(records_per_page).project(Arel.sql('*'))
           records = ActiveRecord::Base.connection.select_all(query.to_sql)
           records = Utils.convert_booleans(records, boolean_columns)
           yield records
@@ -195,7 +199,17 @@ module YamlDb
         ActiveRecord::Base.connection.select_one("SELECT COUNT(*) FROM #{Utils.quote_table(table)}").values.first.to_i
       end
 
-    end
+      # Return the first column as sort key unless the table looks like a
+      # standard has_and_belongs_to_many join table, in which case add the second "ID column"
+      def self.sort_keys(table)
+        first_column, second_column = table_column_names(table)
 
+        if [first_column, second_column].all? { |name| name =~ /_id$/ }
+          [Utils.quote_column(first_column), Utils.quote_column(second_column)]
+        else
+          [Utils.quote_column(first_column)]
+        end
+      end
+    end
   end
 end

@@ -4,7 +4,7 @@ YamlDb is a database-independent format for dumping and restoring data.  It comp
 
 This can be used as a replacement for mysqldump or pg_dump, but only for the databases typically used by Rails apps.  Users, permissions, schemas, triggers, and other advanced database features are not supported - by design.
 
-Any database that has an ActiveRecord adapter should work. ActiveRecord v3 or v4 work in theory, with only v4 tested in practice.
+Any database that has an ActiveRecord adapter should work. ActiveRecord v4 or v5 should be supported.
 
 ## Installation
 
