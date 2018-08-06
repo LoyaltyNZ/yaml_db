@@ -1,3 +1,7 @@
+## yaml_db 0.7.0
+
+* Support Rails 5.2 and Ruby 2.5
+
 ## yaml_db 0.6.0
 
 * Add Rails 5.1 support

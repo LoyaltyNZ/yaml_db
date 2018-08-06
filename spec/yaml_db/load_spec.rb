@@ -13,7 +13,7 @@ module YamlDb
     end
 
     it "calls load structure for each document in the file" do
-      expect(YAML).to receive(:load_documents).with(@io).and_yield({ 'mytable' => {
+      expect(YAML).to receive(:load_stream).with(@io).and_yield({ 'mytable' => {
             'columns' => [ 'a', 'b' ],
             'records' => [[1, 2], [3, 4]]
           } } )
@@ -22,7 +22,7 @@ module YamlDb
     end
 
     it "calls load structure when the document in the file contains no records" do
-      expect(YAML).to receive(:load_documents).with(@io).and_yield({ 'mytable' => nil })
+      expect(YAML).to receive(:load_stream).with(@io).and_yield({ 'mytable' => nil })
       expect(Load).not_to receive(:load_table)
       Load.load(@io)
     end

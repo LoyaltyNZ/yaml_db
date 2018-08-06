@@ -17,13 +17,13 @@ Gem::Specification.new do |s|
   s.files = Dir['README.md', 'lib/**/*']
   s.require_paths = ["lib"]
 
-  s.required_ruby_version = ">= 2.2.5"
+  s.required_ruby_version = ">= 2.3.7"
 
-  s.add_runtime_dependency "rake", ">= 0.8.7"
+  s.add_runtime_dependency "rake", ">= 12.3.1"
 
-  s.add_development_dependency "activerecord",  "~> 4.2"
-  s.add_development_dependency "activesupport", "~> 4.2"
-  s.add_development_dependency "bundler",       "~> 1.14"
-  s.add_development_dependency "rspec",         "~> 3.0"
+  s.add_development_dependency "activerecord",  "~> 5.2"
+  s.add_development_dependency "activesupport", "~> 5.2"
+  s.add_development_dependency "bundler",       "~> 1.16"
+  s.add_development_dependency "rspec",         "~> 3.8"
   s.add_development_dependency "sqlite3",       "~> 1.3"
 end
